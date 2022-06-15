@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <title>Search</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 		<link rel='stylesheet' href='advancedS.css'>
     </head>
     <body>
@@ -9,25 +10,51 @@
         </br>
         <h2> Advanced Search </h2>
         <hr>
-        <h3> Search pages with... </h3>
-        <form action="https://www.google.com/advanced_search">
-            <div>
-                <label for="name">all these words:</label>
-                <input type="text" name="q">
+        <form action="https://www.google.com/search">
+            <div class="position-static">
+                <div class="row">
+                    <div class="col-3">
+                        <h3> Search pages with... </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        <label for="name">all these words:</label>
+                    </div>
+                    <div class="col-2">
+                        <input type="text" name="as_q">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        <label for="name">this exact word or phrase:</label>
+                    </div>
+                    <div class="col-2">
+                        <input type="text" name="as_epq">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        <label for="name">any of these words:</label>
+                    </div>
+                    <div class="col-2">
+                        <input type="text" name="as_oq">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        <label for="name">none of these words:</label>
+                    </div>
+                    <div class="col-2">
+                        <input type="text" name="as_eq">
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="submit_button" class="col-4">
+                        <input type="submit" value="Advanced Search">
+                    </div>
+                </div>
             </div>
-            <div>
-                <label for="name">this exact word or phrase:</label>
-                <input type="text" name="q">
-            </div>
-            <div>
-                <label for="name">any of these words:</label>
-                <input type="text" name="q">
-            </div>
-            <div>
-                <label for="name">none of these words:</label>
-                <input type="text" name="q">
-            </div>
-            <input type="submit" value="Advanced Search">
         </form>
     </body>
 </html>

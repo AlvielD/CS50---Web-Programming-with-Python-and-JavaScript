@@ -1,9 +1,11 @@
 h1 {
+	margin-left: 5px;
 	color: white;
 	font-size: 25px;
 }
 
 h2 {
+	margin-left: 15px;
 	color: firebrick;
 	font-size: 27px;
 }
@@ -15,6 +17,7 @@ h3 {
 input[type=text] {
 	width: 350px;
 	height: 25px;
+	color: white;
     background-color: #292929;
 }
 
@@ -23,13 +26,13 @@ input[type=text]:focus {
 }
 
 input[type=submit]{
-	width: 100px;
+	width: 150px;
 	height: 35px;
-    text-align: right;
-}
-
-div {
-    flex-direction: column;
+    text-align: center;
+	margin-left: 480px;
+	background-color: #6687a2;
+	border-color: #6687a2;
+	color: white;
 }
 
 label {
@@ -38,4 +41,16 @@ label {
 
 body {
 	background-color: #292929;
+}
+
+.position-static {
+	margin-left: 25px;
+}
+
+.row {
+	padding: 5px;
+}
+
+hr {
+	background-color: white;
 }
