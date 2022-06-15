@@ -1,0 +1,41 @@
+h1 {
+	color: white;
+	font-size: 25px;
+}
+
+h2 {
+	color: firebrick;
+	font-size: 27px;
+}
+
+h3 {
+    color: white;
+}
+
+input[type=text] {
+	width: 350px;
+	height: 25px;
+    background-color: #292929;
+}
+
+input[type=text]:focus {
+	border: 2px solid #555;
+}
+
+input[type=submit]{
+	width: 100px;
+	height: 35px;
+    text-align: right;
+}
+
+div {
+    flex-direction: column;
+}
+
+label {
+    color: white;
+}
+
+body {
+	background-color: #292929;
+}
