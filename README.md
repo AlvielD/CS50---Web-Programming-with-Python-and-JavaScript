@@ -1,2 +1,4 @@
 # CS50---Web-Programming-with-Python-and-JavaScript
-Repository for the projects I'm doing on the HardvardX CS50 course.
+
+List of projects on this repository:
+* [Project 0: HTML and CSS](https://github.com/AlvielD/CS50---Web-Programming-with-Python-and-JavaScript/tree/main/Project%200)
