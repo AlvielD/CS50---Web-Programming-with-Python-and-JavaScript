@@ -1,0 +1,11 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Page not found
+{% endblock %}
+
+{% block body %}
+    <h1>ERROR: Requested page not found</h1>
+    The requested entry does not have a page or was not found. Please check the URL and try again.
+    You can also go back <a href="{% url 'index' %}">Home</a>
+{% endblock %}
