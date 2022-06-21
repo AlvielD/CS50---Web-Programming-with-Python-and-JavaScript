@@ -7,6 +7,7 @@ from . import util
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
+        "path": request.path,
         "entries": util.list_entries()
     })
 
