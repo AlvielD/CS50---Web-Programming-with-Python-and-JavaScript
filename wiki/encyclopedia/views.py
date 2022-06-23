@@ -10,6 +10,10 @@ from . import util
 class SearchForm(forms.Form):
     query = forms.CharField(label="", widget=forms.TextInput(attrs={'placeholder': 'Search Encyclopedia'}))
 
+class NewEntry(forms.Form):
+    entryName = forms.CharField(label="", widget=forms.TextInput(attrs={'placeholder': 'Entry\'s Name', 'class': 'entryfield'}))
+    entryBody = forms.CharField(label="", widget=forms.Textarea(attrs={'placeholder': 'Write here the body of your entry...', 'class': 'entryfield'}))
+
 def index(request):
     return render(request, "encyclopedia/index.html", {
         # There might be a way of not creating a form everytime we call the layout (Mayber overriding render or smth)
@@ -71,3 +75,10 @@ def show_results(request):
                 })
 
     raise Exception("Something unexpected happened...")
+
+# TODO Code the backend for the creation of the entry. Need to receive it, store as an .md file an display it.
+def create_newpage(request):
+    return render(request, "encyclopedia/create.html", {
+        'form': SearchForm(),
+        'entryForm': NewEntry()
+    })
