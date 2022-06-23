@@ -1,0 +1,21 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Results
+{% endblock %}
+
+{% block body %}
+    <h1>Results</h1>
+
+    {% if results %} <!-- If the list is not empty -->
+        Maybe you wanted to say...
+        <ul>
+            {% for result in results %}
+                <li><a href="{% url 'entry_page' result %}">{{ result }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}<!-- If the list is empty -->
+        Sorry, there are no results for this query :(
+    {% endif %}
+
+{% endblock %}

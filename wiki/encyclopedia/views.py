@@ -1,3 +1,4 @@
+from logging import exception
 from turtle import width
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -50,12 +51,23 @@ def show_results(request):
             # Get the 'cleaned' version of form data
             query = form.cleaned_data['query']
 
+            entries = util.list_entries()   # Entries in the encyclopedia
+            results = []                    # List of entries that contains the query as a substring.
+
             # Now, process the data
-            if query in util.list_entries():
+            if query in entries:
                 return render_entry(request, query)
             else:
-                # TODO display a page with substrings as results
-                pass
-    
-    # TODO Maybe give some feedback that the query was not correct
-    return index(request)
+                # For each entry in the encyclopedia, check if it contains the query as a substring
+                for entry in entries:
+                    # If the entry has the query as substring, then add it to the list of results.
+                    if entry.find(query) != -1:
+                        results.append(entry)
+                
+                # Render the page with the results of the searching.
+                return render(request, "encyclopedia/results.html", {
+                    'form': SearchForm(),
+                    'results': results
+                })
+
+    raise Exception("Something unexpected happened...")
