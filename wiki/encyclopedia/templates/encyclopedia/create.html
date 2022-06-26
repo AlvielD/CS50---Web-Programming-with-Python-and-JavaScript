@@ -9,5 +9,6 @@
     <form method="post">
         {% csrf_token %}
         {{ entryForm.as_p }}
+        <input id="aceptar" type="submit" value="Aceptar">
     </form>
 {% endblock %}

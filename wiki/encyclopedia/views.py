@@ -78,6 +78,23 @@ def show_results(request):
 
 # TODO Code the backend for the creation of the entry. Need to receive it, store as an .md file an display it.
 def create_newpage(request):
+
+    if request.method == 'POST':
+        form = NewEntry(request.POST)
+
+        # TODO treat the exception, in case the form is not valid
+        if form.is_valid():
+            #TODO check the entry was not already added
+            name = form.cleaned_data['entryName']
+            body = form.cleaned_data['entryBody']
+
+            # Write the entry as an .md file
+            with open(f'entries/{name}.md', 'w') as f:
+                f.write(f'#{name}\n\n{body}')
+            
+            return render_entry(request, name)
+
+    # This is only if the request method is GET
     return render(request, "encyclopedia/create.html", {
         'form': SearchForm(),
         'entryForm': NewEntry()
