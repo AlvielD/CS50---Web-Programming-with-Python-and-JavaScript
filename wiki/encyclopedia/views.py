@@ -1,4 +1,5 @@
 from logging import exception
+import random
 from turtle import width
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -13,6 +14,7 @@ class SearchForm(forms.Form):
 class NewEntry(forms.Form):
     entryName = forms.CharField(label="", widget=forms.TextInput(attrs={'placeholder': 'Entry\'s Name', 'class': 'entryfield'}))
     entryBody = forms.CharField(label="", widget=forms.Textarea(attrs={'placeholder': 'Write here the body of your entry...', 'class': 'entryfield'}))
+    formType = forms.CharField(label="", widget=forms.HiddenInput())
 
 
 def index(request):
@@ -41,7 +43,8 @@ def render_entry(request, entry):
         })
     except:
         return render(request, "encyclopedia/error.html", {
-            "form": SearchForm()
+            "form": SearchForm(),
+            "error_message": "The requested entry does not have a page or was not found. Please check the URL and try again."
         })
 
 def show_results(request):
@@ -77,12 +80,12 @@ def show_results(request):
 
     raise Exception("Something unexpected happened...")
 
-# TODO Code the backend for the creation of the entry. Need to receive it, store as an .md file an display it.
+# TODO You can only edit once, because the url is not redirected.
 def create_newpage(request):
 
     if request.method == 'POST':
         # If the request comes from the entry, it needs to be edited.
-        if request.META['HTTP_REFERER'].find('entry'):
+        if request.META['HTTP_REFERER'].find('create') == -1:
             # Get the entry name from the HTML form
             entry = request.POST.get('name')
 
@@ -96,25 +99,49 @@ def create_newpage(request):
             # render the entry with the existing content
             return render(request, "encyclopedia/create.html", {
                 "form": SearchForm(),
-                "entryForm": NewEntry(initial={'entryName': entry, 'entryBody': md_content})
+                "entryForm": NewEntry(initial={'entryName': entry, 'entryBody': md_content, "formType": "edit"})
             })
+        else:
+            # The entry is being created
+            form = NewEntry(request.POST)
 
-        form = NewEntry(request.POST)
+            if form.is_valid():
 
-        # TODO treat the exception, in case the form is not valid
-        if form.is_valid():
-            #TODO check the entry was not already added
-            name = form.cleaned_data['entryName']
-            body = form.cleaned_data['entryBody']
+                # Get the data from the form
+                name = form.cleaned_data['entryName']
+                body = form.cleaned_data['entryBody']
+                entryType = form.cleaned_data['formType']
 
-            # Write the entry as an .md file
-            with open(f'entries/{name}.md', 'w') as f:
-                f.write(f'#{name}\n\n{body}')
-            
-            return render_entry(request, name)
+                if name in util.list_entries() and entryType != "edit":
+
+                    # The entry already exists and is not asking to be edited
+                    return render(request, "encyclopedia/error.html", {
+                        "form": SearchForm(),
+                        "error_message": "You tried to create an entry that already exists in the encyclopedia."
+                    })
+                else:
+                    # Write the entry as an .md file
+                    with open(f'entries/{name}.md', 'w') as f:
+                        f.write(f'#{name}\n\n{body}')
+                    
+                    return render_entry(request, name)
+            else:
+                # If the form is invalid, re-render the page with the existing information.
+                return render(request, "encyclopedia/create.html", {
+                    "form": SearchForm(),
+                    "entryForm": NewEntry(initial={"entryName": name, "entryBody": body})
+                })
 
     # This is only if the request method is GET
     return render(request, "encyclopedia/create.html", {
         'form': SearchForm(),
         'entryForm': NewEntry()
     })
+
+
+def random_page(request):
+
+    entries = util.list_entries()
+    entry = random.choice(entries)
+
+    return render_entry(request, entry)
