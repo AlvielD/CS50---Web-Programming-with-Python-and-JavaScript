@@ -1,14 +1,28 @@
+from tkinter.tix import Form
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django import forms
+
+from auctions.utils import get_auction_listings
 
 from .models import User
 
 
+class ListingForm(forms.Form):
+    title = forms.CharField(max_length=100, required=True)
+    description = forms.CharField(max_length=1000, required=True)
+    startBid = forms.IntegerField(required=True)
+    #image = forms.ImageField(upload_to='auction_images', required=False)
+    category = forms.CharField(max_length=100, required=False)
+
+
 def index(request):
-    return render(request, "auctions/index.html")
+    return render(request, "auctions/index.html", {
+        "listings": get_auction_listings()
+    })
 
 
 def login_view(request):
@@ -61,3 +75,9 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+def create_listing(request):
+    form = ListingForm()
+    return render(request, "auctions/create_listing.html", {
+        "form": form
+    })

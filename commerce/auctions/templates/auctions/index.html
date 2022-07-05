@@ -3,5 +3,14 @@
 {% block body %}
     <h2>Active Listings</h2>
 
-    TODO
+    <ul>
+        <!-- TODO show the rest of the data for the listing -->
+        {% for listing in listings %}
+            <li>
+                {{ listing.title }}
+            </li>
+        {% empty %}
+            <li>No listings found.</li>
+        {% endfor %}
+    </ul>
 {% endblock %}
