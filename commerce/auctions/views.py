@@ -13,9 +13,9 @@ from .models import User
 
 class ListingForm(forms.Form):
     title = forms.CharField(max_length=100, required=True)
-    description = forms.CharField(max_length=1000, required=True)
+    description = forms.CharField(max_length=1000, required=False)
     startBid = forms.IntegerField(required=True)
-    #image = forms.ImageField(upload_to='auction_images', required=False)
+    image = forms.ImageField(required=False)
     category = forms.CharField(max_length=100, required=False)
 
 

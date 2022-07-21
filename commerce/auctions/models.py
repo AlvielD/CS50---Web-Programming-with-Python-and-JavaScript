@@ -1,3 +1,4 @@
+from distutils.command import upload
 from turtle import title
 from unicodedata import category, name
 from django.contrib.auth.models import AbstractUser
@@ -9,9 +10,9 @@ class User(AbstractUser):
 
 class AuctionListing(models.Model):
     title = models.CharField(max_length=100)
-    description = models.CharField(max_length=1000)
+    description = models.CharField(max_length=1000, blank=True, null=True)
     startBid = models.IntegerField()
-    image = models.ImageField(upload_to='auction_images')
+    image = models.ImageField(upload_to='auctions/static/auctions/media/images', blank=True)
     category = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
