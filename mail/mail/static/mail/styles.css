@@ -1,3 +1,14 @@
 textarea {
     min-height: 400px;
 }
+
+table, th, td{
+    border: 1px solid #1C6EA4;
+    background-color: #EEEEEE;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+table {
+    width: 100%;
+}
