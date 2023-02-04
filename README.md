@@ -10,3 +10,6 @@ In this project we design a Wikipedia-like online encyclopedia. The repository "
 
 ## Project 2: SQL, Models and Migrations
 Here we design an eBay-like e-commerce auction site that will allow users to post auction listings, place bids on listings, comment on those listings, and add listings to a "watchlist". Project's repository available [here](https://github.com/AlvielD/CS50---Web-Programming-with-Python-and-JavaScript/tree/main/commerce).
+
+## Project 3: JavaScript
+E-mail client web application that allows to manage your e-mails into "inbox", "sent" and "archived" inboxes. You can send, reply and see your e-mails. See the repository mail [here](https://github.com/AlvielD/CS50---Web-Programming-with-Python-and-JavaScript/tree/main/mail).
