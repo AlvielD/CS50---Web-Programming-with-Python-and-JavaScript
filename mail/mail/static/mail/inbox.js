@@ -23,7 +23,7 @@ function compose_email() {
   document.querySelector('#compose-body').value = '';
 }
 
-// TODO: Modify the HTML table so you can see "From" on received emails and "To" on sent ones
+// TODO: Make the emails to light up when you set the mouse on them
 function load_mailbox(mailbox) {
   
   // Show the mailbox and hide other views
@@ -38,17 +38,31 @@ function load_mailbox(mailbox) {
   .then(response => response.json())
   .then(emails => {
 
-      // Create an HTML string for the table
-      let tableHTML = "<table>";
-      emails.forEach(function(email) {
-          tableHTML += 
-            "<tr><td><strong>From:</strong> " + email.recipients[0] + "</td><td><strong>Subject:</strong> " + email.subject + "</td></tr>" +
-            "<tr><td colspan=\"2\">" + email.body + "</td></tr>";
-      });
-      tableHTML += "</table>";
+      // Create the table element
+      const email_table = document.createElement('table');
 
-      // Insert the HTML into the page
-      document.querySelector("#emails-view").innerHTML = tableHTML;
+      // For each email in the json object, insert a row on the table
+      emails.forEach(function(email) {
+        // Create the container for the email
+        const email_element = email_table.insertRow();      
+
+        // Set HTML text depending on the inbox
+        if (mailbox == "sent") {
+          email_element.innerHTML = `<td><strong>To:</strong> ${email.recipients[0]}</td>`;
+        } else {
+          email_element.innerHTML = `<td><strong>From:</strong> ${email.recipients[0]}</td>`;
+        }
+        email_element.innerHTML += `<td><strong>Subject:</strong> ${email.subject}</td>`;
+
+        // Add the event to make it clickable
+        email_element.addEventListener('click', function() {
+          // TODO: Take the user to a different view so he can see the content of the email
+            console.log(email)
+        });
+
+        // Add email to the emails-view
+        document.querySelector('#emails-view').append(email_table);
+      });
   });
 
 }
