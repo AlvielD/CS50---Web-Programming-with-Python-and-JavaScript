@@ -15,6 +15,7 @@ function compose_email() {
 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#mailtext-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
 
   // Clear out composition fields
@@ -28,6 +29,7 @@ function load_mailbox(mailbox) {
   
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
+  document.querySelector('#mailtext-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'none';
 
   // Show the mailbox name
@@ -39,25 +41,40 @@ function load_mailbox(mailbox) {
   .then(emails => {
 
       // Create the table element
-      const email_table = document.createElement('table');
+      let email_table = document.createElement('table');
 
       // For each email in the json object, insert a row on the table
       emails.forEach(function(email) {
         // Create the container for the email
-        const email_element = email_table.insertRow();      
+        let email_element = email_table.insertRow();      
 
         // Set HTML text depending on the inbox
+        console.log(email)
         if (mailbox == "sent") {
           email_element.innerHTML = `<td><strong>To:</strong> ${email.recipients[0]}</td>`;
         } else {
-          email_element.innerHTML = `<td><strong>From:</strong> ${email.recipients[0]}</td>`;
+          email_element.innerHTML = `<td><strong>From:</strong> ${email.sender}</td>`;
         }
         email_element.innerHTML += `<td><strong>Subject:</strong> ${email.subject}</td>`;
+        email_element.innerHTML += `<td style="text-align:right">${email.timestamp}</td>`;
 
-        // Add the event to make it clickable
+        // Add the event to make the email clickable
         email_element.addEventListener('click', function() {
-          // TODO: Take the user to a different view so he can see the content of the email
-            console.log(email)
+          // Mark email as read
+          fetch(`/emails/${email.id}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                read: true
+            })
+          })
+          .then(response => response.json())
+          .then(result => {
+              // Print result
+              console.log("The email was read");
+          });
+
+          // Show the email view
+          show_mail(email);
         });
 
         // Add email to the emails-view
@@ -65,6 +82,41 @@ function load_mailbox(mailbox) {
       });
   });
 
+}
+
+function show_mail(email) {
+
+  // Show mailtext view and hide the others
+  // Show the mailbox and hide other views
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#mailtext-view').style.display = 'block'
+  document.querySelector('#compose-view').style.display = 'none';
+
+  // Get the mailview element and create needed ones to be added
+  let mailview = document.querySelector('#mailtext-view');
+  let subject_element = document.createElement('h3');
+  let from_element = document.createElement('p');
+  let to_element = document.createElement('p');
+  let timestamp_element = document.createElement('p');
+  let body_element = document.createElement('p');
+
+  // Clear view before adding anything
+  mailview.innerHTML = '';
+
+  // Fill each HTML element with the data
+  subject_element.innerHTML = `${email.subject}`;
+  from_element.innerHTML = `<strong>From:</strong> ${email.sender}`;
+  to_element.innerHTML = `<strong>To:</strong> ${email.recipients[0]}`;
+  timestamp_element.innerHTML = `<strong>Timestampt:</strong> ${email.timestamp}`;
+  body_element.innerHTML = `${email.body}`;
+
+  // Append to the view
+  mailview.append(subject_element);
+  mailview.append(from_element);
+  mailview.append(to_element);
+  mailview.append(timestamp_element);
+  mailview.append(document.createElement('hr'));
+  mailview.append(body_element);
 }
 
 function send_mail() {
