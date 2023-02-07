@@ -4,18 +4,20 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
-  document.querySelector('#compose').addEventListener('click', compose_email);
+  document.querySelector('#compose').addEventListener('click', () => compose_email());
   document.querySelector("#compose-form").addEventListener("submit", send_mail);
 
   // By default, load the inbox
   load_mailbox('inbox');
 });
 
+
 /**
  * Show the compose view to send emails. Before, it removes the content
  * of the forms' fields.
+ * @param {String} recipient - the recipient of the email, if not set, then it uses the empty string.
  */
-function compose_email() {
+function compose_email(recipient='', subject='', body='') {
 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
@@ -23,10 +25,13 @@ function compose_email() {
   document.querySelector('#compose-view').style.display = 'block';
 
   // Clear out composition fields
-  document.querySelector('#compose-recipients').value = '';
-  document.querySelector('#compose-subject').value = '';
-  document.querySelector('#compose-body').value = '';
+  // The recipient by default is '', unless we pass it as parameter
+  // (This is the case for the reply button)
+  document.querySelector('#compose-recipients').value = recipient;
+  document.querySelector('#compose-subject').value = subject;
+  document.querySelector('#compose-body').value = body;
 }
+
 
 // TODO: Make the emails to light up when you set the mouse on them
 /**
@@ -59,6 +64,7 @@ function load_mailbox(mailbox) {
       });
   });
 }
+
 
 /**
  * This function loads a single mail in the mails listing that
@@ -146,6 +152,7 @@ function load_mail(mailbox, email_table, email) {
   document.querySelector('#emails-view').append(email_table);
 }
 
+
 /**
  * Shows a full view of the email with all its needed fields like
  * "From", "To", "Timestamp", ...
@@ -162,9 +169,8 @@ function show_mail(email) {
   // Get the mailview element and create needed ones to be added
   let mailview = document.querySelector('#mailtext-view');
   let subject_element = document.createElement('h3');
-  let from_element = document.createElement('p');
-  let to_element = document.createElement('p');
-  let timestamp_element = document.createElement('p');
+  let mail_info = document.createElement('p');
+  let reply_button = document.createElement('button');
   let body_element = document.createElement('p');
 
   // Clear view before adding anything
@@ -172,19 +178,40 @@ function show_mail(email) {
 
   // Fill each HTML element with the data
   subject_element.innerHTML = `${email.subject}`;
-  from_element.innerHTML = `<strong>From:</strong> ${email.sender}`;
-  to_element.innerHTML = `<strong>To:</strong> ${email.recipients[0]}`;
-  timestamp_element.innerHTML = `<strong>Timestampt:</strong> ${email.timestamp}`;
+  mail_info.innerHTML = 
+    `<strong>From:</strong> ${email.sender}<br>
+    <strong>To:</strong> ${email.recipients}<br>
+    <strong>Timestampt:</strong> ${email.timestamp}`;
+  reply_button.innerHTML = 'Reply';
   body_element.innerHTML = `${email.body}`;
+
+  // Add same classes used for all the buttons in the app
+  reply_button.classList = "btn btn-sm btn-outline-primary"
+
+  // Make the 'Reply' button clickable
+  reply_button.addEventListener('click', function() {
+
+    // Modify the subject if it does not inlcude 'RE: ' already.
+    let new_subject = email.subject;
+    if (!new_subject.includes('RE: ')) {
+      new_subject = `RE: ${email.subject}`;
+    }
+
+    // Modify the body to contain the following sentece...
+    let new_body = `On ${email.timestamp} ${email.sender} wrote: ${email.body}`
+
+    // Load composite view, passing the parameters
+    compose_email(email.sender, new_subject, new_body);
+  });
 
   // Append to the view
   mailview.append(subject_element);
-  mailview.append(from_element);
-  mailview.append(to_element);
-  mailview.append(timestamp_element);
+  mailview.append(mail_info);
+  mailview.append(reply_button);
   mailview.append(document.createElement('hr'));
   mailview.append(body_element);
 }
+
 
 /**
  * Take the values from the form of the compose view and send a 
