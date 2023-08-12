@@ -3,5 +3,7 @@
 {% block body %}
     <h2>Active Listings</h2>
 
-    TODO
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
 {% endblock %}
