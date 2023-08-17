@@ -8,7 +8,13 @@ from .models import User, AuctionListing
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+
+    # Get the active listings
+    listings = AuctionListing.objects.all()
+
+    return render(request, "auctions/index.html", {
+        "listings": listings
+    })
 
 
 def login_view(request):
@@ -91,7 +97,8 @@ def create_listing(request):
             })
 
         return render(request, "auctions/index.html", {
-            "message": "Listing succesfully created"
+            "message": "Listing succesfully created",
+            "listings": AuctionListing.objects.all()
         })
     else:
         return render(request, "auctions/create.html")
