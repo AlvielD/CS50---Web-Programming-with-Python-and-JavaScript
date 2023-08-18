@@ -15,7 +15,7 @@
                     <img src="{{ listing.imgURL }}" class="img-thumbnail" height="200px" width="200px">
                 </td>
                 <td>
-                    <h3>{{ listing.title }}</h3><br>
+                    <h3><a href="{% url 'listing' id=listing.listing_id %}">{{ listing.title }}</a></h3><br>
                     <strong>Price:</strong> {{ listing.starting_bid }}€
                 </td>
             </tr>

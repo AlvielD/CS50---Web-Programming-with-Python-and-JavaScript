@@ -71,7 +71,6 @@ def register(request):
 
 def create_listing(request):
     if request.method == "POST":
-        # TODO: Take the sent form and create the listing
         # Take the data from the form
         
         title = request.POST['title']
@@ -102,3 +101,14 @@ def create_listing(request):
         })
     else:
         return render(request, "auctions/create.html")
+    
+
+def show_listing(request, id):
+    
+    # Get the listing with the passed id
+    listing = AuctionListing.objects.get(listing_id=id)
+
+    # Render the listing
+    return render(request, "auctions/listing.html", {
+        "listing": listing
+    })

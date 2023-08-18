@@ -2,11 +2,13 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 import uuid
 
+#TODO: Migrate models
 class User(AbstractUser):
     pass
 
 class AuctionListing(models.Model):
     listing_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=512)
     starting_bid = models.FloatField()

@@ -1,0 +1,32 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>listing: {{ listing.title }}</h2>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <img src="{{ listing.imgURL }}" class="img-thumbnail" height="200px" width="200px">
+    <p>{{ listing.description }}</p>
+    <h3>{{ listing.starting_bid }}</h3>
+
+    <!-- Only show form to place a bid is the user is authenticated -->
+    <!--TODO: Update last bid (check if the bis is higher, if not => error) -->
+    {% if user.is_authenticated %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input autofocus class="form-control" type="text" name="bid" placeholder="Bid">
+            </div>
+            <input class="btn btn-primary" type="submit" value="Place Bid">
+        </form>
+    {% endif %}
+
+    <h3>Details</h3>
+    <ol>
+        <li>Listed by: TODO</li>
+        <li>Category: {{ listing.category }}</li>
+    </ol>
+    
+{% endblock %}
