@@ -1,10 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from .models import User, AuctionListing
+from .models import User, AuctionListing, Bid
 
 
 def index(request):
@@ -73,6 +73,7 @@ def create_listing(request):
     if request.method == "POST":
         # Take the data from the form
         
+        author = request.user
         title = request.POST['title']
         description = request.POST['description']
         start_bid = request.POST['start_bid']
@@ -83,6 +84,7 @@ def create_listing(request):
         # Attempt to create a listing
         try:
             listing = AuctionListing(
+                author=author,
                 title=title, 
                 description=description, 
                 starting_bid=start_bid, 
@@ -108,7 +110,24 @@ def show_listing(request, id):
     # Get the listing with the passed id
     listing = AuctionListing.objects.get(listing_id=id)
 
+    # Get the bids associated with the listing
+    bid = Bid.objects.filter(listing_id=id).order_by('amount').last()
+
     # Render the listing
     return render(request, "auctions/listing.html", {
-        "listing": listing
+        "listing": listing,
+        "last_bid": bid
     })
+
+def create_bid(request):
+    
+    if request.method == 'POST':
+        amount = request.POST['amount']
+        user = request.user
+        id = request.POST['listing_id']
+        listing = AuctionListing.objects.get(listing_id=id)
+
+        bid = Bid(amount=amount, user=user, listing_id=listing)
+        bid.save()
+
+        return redirect('listing', id=id)
