@@ -5,3 +5,7 @@ body {
 .img-cell {
     width: 200px;
 }
+
+.alertMSG {
+    padding: 10px;
+}

@@ -122,12 +122,26 @@ def show_listing(request, id):
 def create_bid(request):
     
     if request.method == 'POST':
-        amount = request.POST['amount']
-        user = request.user
+
+        # Get data from the request to check is correct
+        amount = float(request.POST['amount'])
         id = request.POST['listing_id']
+        user = request.user   
         listing = AuctionListing.objects.get(listing_id=id)
 
-        bid = Bid(amount=amount, user=user, listing_id=listing)
-        bid.save()
+        # Get the last bid associated with this listing
+        last_bid = Bid.objects.filter(listing_id=id).order_by('amount').last()
 
-        return redirect('listing', id=id)
+        if amount > last_bid.amount:
+            
+            # Create and save bid
+            bid = Bid(amount=amount, user=user, listing_id=listing)
+            bid.save()
+
+            return redirect('listing', id=id)
+        else:
+            return render(request, "auctions/listing.html", {
+                'message': "ERROR: The bid needs to be higher than the actual one",
+                "listing": listing,
+                "last_bid": last_bid
+            })

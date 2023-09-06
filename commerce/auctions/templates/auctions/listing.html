@@ -9,10 +9,6 @@
         </div>
     {% endif %}
 
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
-
     <img src="{{ listing.imgURL }}" class="img-thumbnail" height="200px" width="200px">
     <p>{{ listing.description }}</p>
     {% if last_bid %}
@@ -22,7 +18,6 @@
     {% endif %}
 
     <!-- Only show form to place a bid is the user is authenticated -->
-    <!--TODO: Update last bid (check if the bis is higher, if not => error) -->
     {% if user.is_authenticated %}
         <form action="{% url 'bid' %}" method="post">
             {% csrf_token %}
@@ -32,6 +27,11 @@
             </div>
             <input class="btn btn-primary" type="submit" value="Place Bid">
         </form>
+    {% endif %}
+
+    <!--TODO: Make the message be a bit more separated to the button-->
+    {% if message %}
+        <div class="alert alert-primary alertMSG" role="alert">{{ message }}</div>
     {% endif %}
 
     <h3>Details</h3>
