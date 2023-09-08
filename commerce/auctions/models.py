@@ -28,3 +28,8 @@ class Comment(models.Model):
     text = models.CharField(max_length=512)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     listing_id = models.ForeignKey(AuctionListing, on_delete=models.CASCADE)
+
+class Watchlist(models.Model):
+    watchlist_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    listing = models.ForeignKey(AuctionListing, on_delete=models.CASCADE)

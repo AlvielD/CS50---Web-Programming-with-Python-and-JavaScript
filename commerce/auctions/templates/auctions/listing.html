@@ -3,10 +3,11 @@
 {% block body %}
     <h2>listing: {{ listing.title }}</h2>
     {% if user.is_authenticated %}
-        <!--TODO: Make the button add the listing to watchlist-->
-        <div>
-            <button class="btn btn-primary" onclick="toWatchlist" value="Watchlist"></button>
-        </div>
+        <form action="{% url 'watchlist' %}" method="post">
+            {% csrf_token %}
+            <input class="btn btn-secondary" type="submit" value="Watchlist">
+            <input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+        </form>
     {% endif %}
 
     <img src="{{ listing.imgURL }}" class="img-thumbnail" height="200px" width="200px">
@@ -29,7 +30,6 @@
         </form>
     {% endif %}
 
-    <!--TODO: Make the message be a bit more separated to the button-->
     {% if message %}
         <div class="alert alert-primary alertMSG" role="alert">{{ message }}</div>
     {% endif %}

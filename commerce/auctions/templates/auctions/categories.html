@@ -1,0 +1,21 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Categories</h2>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <ul class="list-group">
+        {% for category in categories %}
+            <!--TODO: Add the reference to the category listing-->
+            <a href="">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ category.category }}
+                    <span class="badge badge-primary badge-pill">{{ category.count }}</span>
+                </li>
+            </a>
+        {% endfor %}
+    </ul>
+{% endblock %}

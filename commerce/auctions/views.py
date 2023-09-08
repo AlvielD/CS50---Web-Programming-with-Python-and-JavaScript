@@ -3,8 +3,9 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.db.models import Count
 
-from .models import User, AuctionListing, Bid
+from .models import User, AuctionListing, Bid, Watchlist
 
 
 def index(request):
@@ -145,3 +146,38 @@ def create_bid(request):
                 "listing": listing,
                 "last_bid": last_bid
             })
+        
+def show_categories(request):
+    
+    if request.method == "POST":
+        # Get the category listings
+        listings = AuctionListing.objects.get(request.POST['category'])
+
+        return render(request, "auctions/index.html", {
+            "listings": listings
+        })
+    else:
+
+        categories = AuctionListing.objects.values('category').annotate(count=Count('category'))
+
+        return render(request, "auctions/categories.html", {
+            "categories": categories
+        })
+
+        
+def add_to_watchlist(request):
+    if request.method == "POST":
+        # TODO: Add to watchlist
+        user = request.user
+        listing = AuctionListing.objects.get(listing_id=request.POST['listing_id'])
+
+        watchlist = Watchlist(user, listing)
+        watchlist.save()
+    else:
+        # Get the active listings
+        watchlist = Watchlist.objects.get(user=request.user)
+        print(watchlist)
+
+        #return render(request, "auctions/index.html", {
+        #    "listings": listings
+        #})
